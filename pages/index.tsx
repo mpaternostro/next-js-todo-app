@@ -1,47 +1,22 @@
-import Head from "next/head";
-import Header from "components/Header";
-import NewTodo from "components/NewTodo";
+import { Login } from "components/Login";
 
-import { addNewTodoFn } from "types/types";
+import { withApollo } from "lib/withApollo";
+import { useFetchUser } from "lib/user";
+
+import Homepage from "components/Homepage";
 
 export function Home(): JSX.Element {
-  const addNewTodo: addNewTodoFn = () => {
-    return;
-  };
+  const { user, loading } = useFetchUser();
 
-  return (
-    <div>
-      <Head>
-        <title>Next.js Todo App</title>
-        <link rel="icon" href="/favicon.ico" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter&display=optional"
-          rel="stylesheet"
-        />
-      </Head>
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-      <main className="p-4">
-        <Header />
-        <div className="flex pt-4">
-          <NewTodo addNewTodo={addNewTodo} />
-        </div>
-      </main>
+  if (!loading && !user) {
+    return <Login />;
+  }
 
-      <style jsx>{``}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-        }
-
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
-    </div>
-  );
+  return <Homepage />;
 }
 
-export default Home;
+export default withApollo()(Home);

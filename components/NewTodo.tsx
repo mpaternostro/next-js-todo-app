@@ -1,32 +1,21 @@
-import { ChangeEvent, FormEvent, useState } from "react";
 import { ExclamationCircleIcon } from "@heroicons/react/solid";
-
-import { addNewTodoFn } from "types/types";
+import { handleAddNewTodoFn, handleSetInputFn } from "types/types";
 
 interface NewTodoProps {
-  addNewTodo: addNewTodoFn;
+  handleSetInput: handleSetInputFn;
+  handleAddNewTodo: handleAddNewTodoFn;
+  input: string;
+  error: boolean;
 }
 
-export default function NewTodo({ addNewTodo }: NewTodoProps): JSX.Element {
-  const [error, setError] = useState(false);
-  const [input, setInput] = useState("");
-
-  const handleNewTodo = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (input.length < 4) {
-      setError(true);
-      return;
-    }
-    setError(false);
-    addNewTodo(input);
-  };
-
-  const handleSetInput = (event: ChangeEvent<HTMLInputElement>) => {
-    setInput(event.target.value);
-  };
-
+export function NewTodo({
+  handleSetInput,
+  handleAddNewTodo,
+  input,
+  error,
+}: NewTodoProps): JSX.Element {
   return (
-    <form onSubmit={handleNewTodo} autoComplete="off">
+    <form onSubmit={handleAddNewTodo} autoComplete="off">
       <label
         htmlFor="title"
         className="block text-sm font-medium text-gray-700"
@@ -44,7 +33,6 @@ export default function NewTodo({ addNewTodo }: NewTodoProps): JSX.Element {
               : ""
           }`}
           placeholder="i.e. prepare dinner"
-          defaultValue="adamwathan"
           aria-invalid={error ? "true" : "false"}
           aria-describedby={error ? "title-error" : ""}
           value={input}
